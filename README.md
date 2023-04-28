@@ -26,3 +26,12 @@ This dataset was provided via an online course for SQL beginnners.
 ## Where did the dataset come from?
 
 ### Analysis:
+
+
+
+# Project 3: A/B Testing
+
+## What was the purpose of the project?
+A fast-food chain is undecided between 3 possible marketing campaigns for promoting a new item to their menu. To determine which promotion was most effective, utilized python comparing the 3 different promotions in an A/B Test.
+
+## Where did the dataset come from?
