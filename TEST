@@ -1,0 +1,162 @@
+# S&P 500 Stock Prices
+> **Note:** *This dataset was downloaded from Maven Analytics website using the S&P 500 Stock Prices dataset.*
+
+https://www.mavenanalytics.io/data-playground?search=stock%25prices
+
+## S&P 500 Stock Prices
+
+Historical stock market data for current S&P 500 companies, from 2014-2017. Each record represents a single day of trading, and includes the ticker name, volume, high, low, open and close prices.
+
+#### Recommended Analysis From Maven Analytics
+>*Below I answer each question followed with the SQL query to answer the question and its corresponding output from PostgreSQL.*
+
+1.  Which date in the sample saw the largest overall trading volume?  **The date that saw the overall trading volume was August 24, 2015.**    
+    ```SQL
+    SELECT date, SUM(volume) AS 'sum_volume' 
+    FROM stockprices.sp
+    GROUP BY date
+    ORDER BY 'sum_volume' DESC
+    LIMIT 5;
+    ```
+     ![enter image description here](https://i.ibb.co/TKKqfrw/image-2021-12-15-224658.png)
+   2.   On that date, which two stocks were traded most? **On 8/24/2015, BAC (Bank of America) and AAPL (Apple) were traded the most.**
+   ```sql
+SELECT date, symbol, volume
+FROM stockprices.sp
+WHERE date = '2015-08-24'
+GROUP BY symbol, date, volume
+ORDER BY volume DESC
+LIMIT 2;
+```
+   ![enter image description here](https://i.ibb.co/P1FKd3w/image-2021-12-15-225842.png)
+   
+2.  On which day of the week does volume tend to be highest? Lowest? **Wednesday tend to have the highest trading volume while Monday has the least trading volume.**
+ ```sql
+DROP TABLE IF EXISTS temptable;
+CREATE TEMP TABLE temptable AS 
+SELECT
+	EXTRACT(DOW FROM DATE) AS numbers,
+	TO_CHAR(DATE, 'DAY') AS weekday,
+	volume
+FROM stockprices.sp
+GROUP BY volume, date
+ORDER BY volume DESC; 
+```
+
+![enter image description here](https://i.ibb.co/WKtWZ6T/image-2021-12-20-221047.png) 
+
+```sql
+SELECT 
+	numbers,
+	SUM(volume) AS sum_volume,
+	weekday
+FROM temptable
+GROUP BY numbers, weekday
+ORDER BY sum_volume DESC;
+```  
+![enter image description here](https://i.ibb.co/jzLxf4q/image-2021-12-20-221531.png)
+**Wednesday is also the day of the week that is traded the most while Monday is the least favorable day to trade out of the week.**
+```sql
+SELECT 
+	numbers,
+	COUNT(*) AS frequency,
+	weekday
+FROM temptable
+GROUP BY numbers, weekday
+ORDER BY frequency DESC;
+``` 
+![enter image description here](https://i.ibb.co/TWT22HX/image-2021-12-20-222453.png)
+
+3.  On which date did Amazon (AMZN) see the most volatility, measured by the difference between the high and low price?
+ ``SQL
+SELECT date(high - low) AS avg_vol
+FROM stockprices.sp
+WHERE symbol LIKE '%AMZN%'
+ORDER BY 'avg_vol' DESC;
+``
+
+
+4.  If you could go back in time and invest in one stock from 1/2/2014 - 12/29/2017, which would you choose? What % gain would you realize?
+
+
+
+>*My own analysis on this dataset*
+5. Which sector had the best return over the past three years?
+
+
+# A little background on the S&P 500
+## What is an Index?
+
+A stock market index measures the performances of a collection of stocks. By measuring these stocks collectively, indices track how the overall market is performing better than only looking at the performance of a single stock. Basically if you focus too closely on just one thing you might not have a good understanding of the larger picture. This is why an index’s performance provides more complete information than the performance of individual stocks- indices provide a wider view of the stock market as a whole. An index fund aims to track the returns of a designated stock market index. A market index is a hypothetical portfolio of securities that represents a segment of the market. An example is the S&P500.
+
+  
+
+## The NASDAQ
+
+Includes 3,000 or so companies that are traded on the Nasdaq exchange. The Nasdag includes smaller companies than other indices, but also includes many of the largest tech companies like Apple, Microsoft, Amazon, and Alphabet. Because nearly half of the companies are tech companies the Nasdaq is widely considered a better gauge for the Technology industry. Some of the companies may also be included on the DOW, the S&P 500 or both. Each index helps measure how the overall market is doing through the performance of the securities it tracks.
+
+  
+
+## DOW Jones Industrial
+
+The first index was the DOW Jones Industrial Average, published in 1896. Financial reporter Charles Dow added up the closing prices of 12 of the largest stocks at the time and divided the total by 12 to get the average. Today the DOW consists of 30 of the largest and most successful companies in the U.S. These companies are hand picked by experts to represent a wide variety of industries. Some of these companies affect the average more than others, though because many indices are weighted. Think of the idea of weighting like grades: a final exam is going to make up a larger portion of your grade than a daily homework assignment. In the DOW, companies with higher prices are given more weight. In 2018, Boeing the heist prices stock in the index, made up about 9% of the index. Whereas Pfizer the least expensive stock was only 1% of the index. So a change in Boeing’s price would have had a greater impact on the DOW than if Pfizer’s price changed. While the DOW is the oldest and most well-known index, some believe that its measurement is less representative of the overall market than the S&P 500 even though they often perform similarly to each other.
+
+  
+
+## S&P 500
+
+There are so many options to choose from when investing. Just want a stable fund that will provide them with what they are looking for, they don't want to spend a lot of time researching investments. Instead they want a product with stability and growth so they can reach their goals. That’s where the S&P 500 comes in; this is the most common indication of how the stock market is performing. It measures the performance of the 500 largest publicly traded companies in the US. Due to its broader exposure, some believe that the S&P500 is the best measurement of the U.S. stock market. The S&P 500 is weighted by market cap. Market cap is the number of a company’s outstanding shares multiplied by the price per share. Because of this the companies with the largest total market value have the greatest impact on the average of the S&P 500.
+
+  
+
+## What is the S&P Index Fund and is it a good investment to put your money in?
+
+An index is a way to track the progress of the stock market; the S&P 500 is an index that mirrors how the 500 largest publicly traded companies are performing. Just as the DOW iJones industrial avg. tracks the 30 largest blue chip companies because the S&P accounts for 80% of the market value, it's widely looked to as the best angle gauge of the market. Which means this index fund is not worse but also no better than this section of the market. Index funds are a passive form of investing, they are a type of mutual fund not actually managed by someone looking to beat the market but instead designed to mirror the performance of the index. Like the S&P 50 index. Due to their passive management you can own them for very little cost. For example, a vanguard S&P 500 index fund only charges .3% or $300 every year for each million dollars invested.
+
+  
+
+## How does it work?
+
+If you invest in the S&P 500 you will own shares of all 500 of the large cap stocks that make up the index. Those companies can and do change if the S&P 500 adds or drops others from the actual index. It is very diversified, it has investments spread out among 11 different industries with no sector having more than %30 of the money invested. Limiting the allocations to sectors is reassuring when many funds are heavily invested in sectors like financials, industrials, technology, healthcare. This provides investors with immediate broad market diversification, without having to do much homework.
+
+  
+
+## What are the different business sectors that make up the index?
+
+Technology is by far the largest sector, holding around 27% of the total index. health care is about 14% allocation which includes companies like united health group, brestles myers squibb. Consumer discretionary makes up about 10% such as netflix disney and starbucks. Communication services like Verizon and AT&T. The 5th is financials like Wells Fargo, PayPal. 6th is industrials which include Caterpillar, Boeing and 3M. Consumer staples is the 7th largest sector which includes Procter & Gamble, COSTCO and CVS. 8th are utilities with companies like American Electric power company. Real estate is the 9th sector includes Crown castle international, public storage, and well tower. 10th is energy which includes Marathon. Lastly is materials which are chemical and construction materials.
+
+  
+
+The top 10 holdings are Apple, Google, Amazon, Berkshire Hathaway, Facebook, Johnson and Johsnon, Microsoft, Proctor and Gamble, and VISA. The performance of these companies accounts for more than 25% of the trading activity and overall return. Just 10 companies control more than 25% of the entire S&P 500, these are huge holdings. So even though the entire index holds 500 companies they are not equally weighted meaning the index holds different amounts of each stock. One advantage of this index is that each company must meet certain criteria to be included. Before adding a stock to the index they are analyzed by the US Index committee to make sure they meet any certain financial health measures. To be eligible to be in the S&P inclusion companies should be a US company, have a market capitalization of at least 8.2 billion dollars, be highly liquid, have a public float of at least 50% of its shares outstanding and its most recent quarter earnings must be positive. The stock must be trading at a reasonable price and must be public for at least 12 months.
+
+  
+
+## Pros and Cons
+
+Because index funds are passively managed since the fund just follows the index they have very low expense ratios or low fees. It is a fairly diversified fund. But the rate of return is a con. If you're happy earning an avg. rate of return this is an amazing investment that provides everything you need for a well balanced portfolio. Although many people want to invest in fairly high returns that will beat the market on avg. not match it. A good growth stock fund outperforms an index that tracks the S&P 500. If you are interested in out performing the market it's possible to do that with a reliable growth stock fund which doesn't involve individual stock picking or timing the market. They are even growth funds that pick the highest growth companies from the S&P 500 by purchasing a fund such that you will receive the diversification and the stable companies found within the index but you only own the fastest growers. The Vanguard S&P 500 holds 283 growth stocks that are chosen from the S&P 500 but more than half of the funds allocation are technology companies, providing the opportunity for excellent growth with a little higher risk. You also have exposure to all other sectors health within the index but with smaller amounts of utility, real estate, financials and others that grow at a smaller rate.
+
+  
+
+Though the market may vary between day to day or even year to year the historical performances of the indices show that over time the stock market tends to rise.
+
+  
+
+In stock tradin, the high and low refer to the maximum and minimum prices in a given time period. Open and close are the prices at which stock began and ended trading in the same period. Volume is the total amount of trading activity.
+
+  
+
+## The significance of the stock’s closing price?
+
+  
+
+The closing price is considered the reference point for any time frame.
+
+  
+
+It is a stocks closing price that determines how a share performed during the day. When researching historical stock price data it is a good practice to use the closing price as the stocks value for that day. The difference between the stock’s open and close divided by the open is the stock’s return or its performance in percentage terms. If we want to take a longer term view of a stock’s performance like one year we would use the closing price from a year ago and compare it to the closing price from today to get the annual return.
+
+  
+
+## Volume
+
+Volume is the total number of shares traded in a security over a period. Every time buyers and sellers exchange shares, the amount gets added to the period’s total volume. Studying volume patterns are an essential aspect of technical analysis because it can show the significance of a stock’s price movement. A price change that occurs in high volume can carry more weight because it indicates that many traders were behind the move. A lower volume price move can be perceived as less important.
