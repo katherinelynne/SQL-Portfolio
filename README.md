@@ -1,5 +1,5 @@
 # SQL-Portfolio
->*NOTE*: most of these files are in markdown
+>**NOTE**: most of these files are in markdown
 # Project 1: Marketing Analytics Case Study: customer email campaign 
 > **NOTE:** *There are a total of 7 tables in this case study.*
 
