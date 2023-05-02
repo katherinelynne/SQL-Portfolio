@@ -3,7 +3,7 @@
 
 ---
 
-<h1 id="proc-sql"><span class="prefix"></span><span class="content">PROC SQL</span><span class="suffix"></span></h1>
+<h1 id="sql"><span class="prefix"></span><span class="content">SQL</span><span class="suffix"></span></h1>
 <h2 id="column-aliases"><span class="prefix"></span><span class="content">Column Aliases</span><span class="suffix"></span></h2>
 <ul>
 <li>Aliases are really important when joining tables and performing other operations with CTEs as they vastly improve SQL code readability. This also reduces the time it takes to debug and quickly scan and understand code.</li>
